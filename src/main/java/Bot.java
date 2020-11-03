@@ -1,23 +1,13 @@
-import org.telegram.telegrambots.ApiContextInitializer;
-import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
-import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 
 public class Bot extends TelegramLongPollingBot {
-    public static void main(String[] args) {
-        ApiContextInitializer.init();
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-        try {
-            telegramBotsApi.registerBot(new Bot());
-        } catch (TelegramApiRequestException e){
-            e.printStackTrace();
-        }
-    }
 
+    String botName = "sdfhgd_bot";
+    String botToken = "1013836728:AAFix5kxXz2UMGYTWkH9MBwnXBDREPTKc5o";
     public void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
@@ -34,15 +24,13 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
-            switch (message.getText()) {
-                case "/help":
-                    sendMsg(message, "I can help you to know what is the weather like. Soon here will be new commands");
-                    break;
-                default:
-                    sendMsg(message, "I can help you to know what is the weather like. Print /help to see commands");
-
+            if (Commands.HELP.equals(message.getText())) {
+                sendMsg(message, Request_answers.HELP);
+            } else {
+                sendMsg(message, Request_answers.DEFAULT);
             }
         }
 
@@ -50,11 +38,11 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "sdfhgd_bot";
+        return botName;
     }
 
     @Override
     public String getBotToken() {
-        return "1013836728:AAFix5kxXz2UMGYTWkH9MBwnXBDREPTKc5o";
+        return botToken;
     }
 }
