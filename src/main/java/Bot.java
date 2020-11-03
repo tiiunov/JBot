@@ -7,7 +7,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 public class Bot extends TelegramLongPollingBot {
 
     String botName = "sdfhgd_bot";
-    String botToken = "1013836728:AAFix5kxXz2UMGYTWkH9MBwnXBDREPTKc5o";
+    String botToken = "";
     public void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
