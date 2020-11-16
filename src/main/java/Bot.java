@@ -8,21 +8,20 @@ import java.io.IOException;
 
 public class Bot extends TelegramLongPollingBot {
 
-    String botName = "sdfhgd_bot";
-    String botToken = "";
-    public void sendMsg(Message message, String text) {
+    private String botName = "sdfhgd_bot";
+    private String botToken = "1013836728:AAFix5kxXz2UMGYTWkH9MBwnXBDREPTKc5o";
+    private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
         try {
-            sendMessage(sendMessage);
+            execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -32,9 +31,13 @@ public class Bot extends TelegramLongPollingBot {
             if (Commands.HELP.equals(message.getText())) {
                 sendMsg(message, Request_answers.HELP);
             } 
-            else try {
-                sendMsg(message, Weather.getWeather(message.getText(), model));
-            } catch (IOException e) {
+            else if (Commands.WEATHER.equals(message.getText())){
+                sendMsg(message, Request_answers.WEATHER);
+            }
+            else
+                try {
+                    sendMsg(message, Weather.getWeather(message.getText(), model));
+            }   catch (IOException e) {
                 sendMsg(message, Request_answers.DEFAULT);
             }
         }
