@@ -39,8 +39,6 @@ public class Bot extends TelegramLongPollingBot {
         return in.nextLine();
     }
 
-
-
     @Override
     public void onUpdateReceived(Update update) {
         Model model = new Model();
