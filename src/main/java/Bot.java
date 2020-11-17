@@ -26,7 +26,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private String readBotToken(){
-        File file = new File("src/token.txt");
+        File file = new File("config/token.txt");
         Scanner in = null;
         {
             try {
