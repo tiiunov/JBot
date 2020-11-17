@@ -36,8 +36,7 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
 
-        String token = in.nextLine();
-        return token;
+        return in.nextLine();
     }
 
 
