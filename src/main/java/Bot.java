@@ -1,12 +1,17 @@
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Bot extends TelegramLongPollingBot {
@@ -19,6 +24,7 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
         try {
+            setButtons(sendMessage);
             execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -59,6 +65,24 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, Request_answers.DEFAULT);
                 }
         }
+
+    }
+
+    public void setButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<>();
+        KeyboardRow firstRow = new KeyboardRow();
+
+        firstRow.add(new KeyboardButton(Commands.HELP));
+        firstRow.add(new KeyboardButton(Commands.WEATHER));
+
+        keyboardRowList.add(firstRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
 
     }
 
