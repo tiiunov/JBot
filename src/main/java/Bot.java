@@ -59,7 +59,7 @@ public class Bot extends TelegramLongPollingBot {
                 task_pointer = 1;
                 sendMsg(message, Request_answers.WEATHER);
             }
-            else if (Commands.CLOTHING_ADVICE.equals(message.getText()) && (task_pointer != 1)){
+            else if (Commands.CLOVING_ADVICE.equals(message.getText()) && (task_pointer != 1)){
                 sendMsg(message, Request_answers.CLOVING_ADVICE);
                 task_pointer = 2;
             }
@@ -99,7 +99,7 @@ public class Bot extends TelegramLongPollingBot {
         KeyboardRow secondRow = new KeyboardRow();
 
         firstRow.add(new KeyboardButton(Commands.WEATHER));
-        firstRow.add(new KeyboardButton(Commands.CLOTHING_ADVICE));
+        firstRow.add(new KeyboardButton(Commands.CLOVING_ADVICE));
         secondRow.add(new KeyboardButton(Commands.HELP));
 
         keyboardRowList.add(firstRow);
