@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 1013836728:AAFix5kxXz2UMGYTWkH9MBwnXBDREPTKc5o
-=======
-1013836728:AAFix5kxXz2UMGYTWkH9MBwnXBDREPTKc5o
->>>>>>> gitt/master
