@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Bot extends TelegramLongPollingBot {
-    private String botName = "sdfhgd_bot";
-    private String botToken = readBotToken();
+    private final String botName = "sdfhgd_bot";
+    private final String botToken = readBotToken();
+    private Integer task_pointer = 0;
+
     private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
@@ -42,28 +44,47 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
 
+        assert in != null;
         return in.nextLine();
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        Model model = new Model();
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             if (Commands.HELP.equals(message.getText())) {
                 sendMsg(message, Request_answers.HELP);
             }
             else if (Commands.WEATHER.equals(message.getText())){
+                task_pointer = 1;
                 sendMsg(message, Request_answers.WEATHER);
             }
-            else
+            else if (Commands.CLOVING_ADVICE.equals(message.getText()) && (task_pointer != 1)){
+                sendMsg(message, Request_answers.CLOVING_ADVICE);
+                task_pointer = 2;
+            }
+            else if (task_pointer == 1){
                 try {
-                    sendMsg(message, Weather.getWeather(message.getText(), model));
+                    sendMsg(message, Weather.getWeather(message.getText(), new Model()));
+                    task_pointer = 0;
                 }   catch (IOException e) {
                     sendMsg(message, Request_answers.DEFAULT);
+                    task_pointer = 0;
                 }
+            }
+            else if (task_pointer == 2){
+                try {
+                    sendMsg(message, Clothing_advice.getAdvice(message.getText()));
+                    task_pointer = 0;
+                } catch (IOException e) {
+                    sendMsg(message, Request_answers.DEFAULT);
+                    task_pointer = 0;
+                }
+            }
+            else {
+                sendMsg(message, Request_answers.EMPTY_TASK);
+            }
         }
-
     }
 
     public void setButtons(SendMessage sendMessage) {
@@ -75,11 +96,14 @@ public class Bot extends TelegramLongPollingBot {
 
         List<KeyboardRow> keyboardRowList = new ArrayList<>();
         KeyboardRow firstRow = new KeyboardRow();
+        KeyboardRow secondRow = new KeyboardRow();
 
-        firstRow.add(new KeyboardButton(Commands.HELP));
         firstRow.add(new KeyboardButton(Commands.WEATHER));
+        firstRow.add(new KeyboardButton(Commands.CLOVING_ADVICE));
+        secondRow.add(new KeyboardButton(Commands.HELP));
 
         keyboardRowList.add(firstRow);
+        keyboardRowList.add(secondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
 
     }

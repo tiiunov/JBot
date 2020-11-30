@@ -11,18 +11,17 @@ public class Weather {
         URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + message + "&units=metric&appid=f60ab5f39cc9f3416a9115a9751f8fad");
 
         Scanner in = new Scanner((InputStream) url.getContent());
-        String result = "";
+        StringBuilder result = new StringBuilder();
         while (in.hasNext()) {
-            result += in.nextLine();
+            result.append(in.nextLine());
         }
 
-        JSONObject object = new JSONObject(result);
+        JSONObject object = new JSONObject(result.toString());
         model.setName(object.getString("name"));
 
         JSONObject main = object.getJSONObject("main");
         model.setTemp(main.getDouble("temp"));
 
-        return "City: " + model.getName() + "\n" +
-                "Temperature: " + model.getTemp() + "C";
+        return "В замечательном городе " + model.getName() + " сейчас " + model.getTemp() + " градусов по Цельсию";
     }
 }

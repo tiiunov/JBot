@@ -2,6 +2,7 @@ public class Model {
 
     private String name;
     private Double temp;
+    private String description;
 
     public String getName() {
         return name;
@@ -15,7 +16,6 @@ public class Model {
         return temp;
     }
 
-    public void setTemp(Double temp) {
-        this.temp = temp;
-    }
+    public void setTemp(Double temp) { this.temp = temp; }
+
 }
