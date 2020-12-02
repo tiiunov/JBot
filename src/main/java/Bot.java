@@ -54,14 +54,14 @@ public class Bot extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case Commands.HELP:
-                    sendMsg(message, Request_answers.HELP);
+                    sendMsg(message, RequestAnswers.HELP);
                     break;
                 case Commands.WEATHER:
                     taskPointer = TaskPointer.WEATHER;
-                    sendMsg(message, Request_answers.WEATHER);
+                    sendMsg(message, RequestAnswers.WEATHER);
                     break;
                 case Commands.CLOTHING_ADVICE:
-                    sendMsg(message, Request_answers.CLOVING_ADVICE);
+                    sendMsg(message, RequestAnswers.CLOVING_ADVICE);
                     taskPointer = TaskPointer.ADVICE;
                     break;
                 default:
@@ -69,7 +69,7 @@ public class Bot extends TelegramLongPollingBot {
                         sendMsg(message, performTask(message.getText(), taskPointer));
                         taskPointer = TaskPointer.FREE;
                     } else
-                        sendMsg(message, Request_answers.EMPTY_TASK);
+                        sendMsg(message, RequestAnswers.EMPTY_TASK);
                     break;
             }
         }
@@ -83,7 +83,7 @@ public class Bot extends TelegramLongPollingBot {
             else
                 result = ClothingAdvice.getAdvice(message);
         } catch (IOException e) {
-            result = Request_answers.DEFAULT;
+            result = RequestAnswers.DEFAULT;
         }
         return result;
     }
