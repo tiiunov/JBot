@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class Weather {
 
-    public static String getWeather(String message, Model model) throws IOException {
+    public static String getWeather(String message) throws IOException {
         URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + message + "&units=metric&appid=f60ab5f39cc9f3416a9115a9751f8fad");
-
+        Model model = new Model();
         Scanner in = new Scanner((InputStream) url.getContent());
         StringBuilder result = new StringBuilder();
         while (in.hasNext()) {

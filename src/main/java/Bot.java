@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class Bot extends TelegramLongPollingBot {
     private final String botName = "sdfhgd_bot";
     private final String botToken = readBotToken();
-    private Integer task_pointer = 0;
+    private TaskPointer taskPointer = TaskPointer.FREE;
 
     private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
@@ -52,39 +52,40 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
-            if (Commands.HELP.equals(message.getText())) {
-                sendMsg(message, Request_answers.HELP);
-            }
-            else if (Commands.WEATHER.equals(message.getText())){
-                task_pointer = 1;
-                sendMsg(message, Request_answers.WEATHER);
-            }
-            else if (Commands.CLOTHING_ADVICE.equals(message.getText()) && (task_pointer != 1)){
-                sendMsg(message, Request_answers.CLOVING_ADVICE);
-                task_pointer = 2;
-            }
-            else if (task_pointer == 1){
-                try {
-                    sendMsg(message, Weather.getWeather(message.getText(), new Model()));
-                    task_pointer = 0;
-                }   catch (IOException e) {
-                    sendMsg(message, Request_answers.DEFAULT);
-                    task_pointer = 0;
-                }
-            }
-            else if (task_pointer == 2){
-                try {
-                    sendMsg(message, Clothing_advice.getAdvice(message.getText()));
-                    task_pointer = 0;
-                } catch (IOException e) {
-                    sendMsg(message, Request_answers.DEFAULT);
-                    task_pointer = 0;
-                }
-            }
-            else {
-                sendMsg(message, Request_answers.EMPTY_TASK);
+            switch (message.getText()) {
+                case Commands.HELP:
+                    sendMsg(message, Request_answers.HELP);
+                    break;
+                case Commands.WEATHER:
+                    taskPointer = TaskPointer.WEATHER;
+                    sendMsg(message, Request_answers.WEATHER);
+                    break;
+                case Commands.CLOTHING_ADVICE:
+                    sendMsg(message, Request_answers.CLOVING_ADVICE);
+                    taskPointer = TaskPointer.ADVICE;
+                    break;
+                default:
+                    if (taskPointer != TaskPointer.FREE) {
+                        sendMsg(message, performTask(message.getText(), taskPointer));
+                        taskPointer = TaskPointer.FREE;
+                    } else
+                        sendMsg(message, Request_answers.EMPTY_TASK);
+                    break;
             }
         }
+    }
+
+    private String performTask(String message, TaskPointer task) {
+        String result;
+        try {
+            if (task == TaskPointer.WEATHER)
+                result = Weather.getWeather(message);
+            else
+                result = ClothingAdvice.getAdvice(message);
+        } catch (IOException e) {
+            result = Request_answers.DEFAULT;
+        }
+        return result;
     }
 
     public void setButtons(SendMessage sendMessage) {
