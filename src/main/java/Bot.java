@@ -18,6 +18,7 @@ public class Bot extends TelegramLongPollingBot {
     private final String botName = "sdfhgd_bot";
     private final String botToken = readBotToken();
     private TaskPointer taskPointer = TaskPointer.FREE;
+    private final ReplyKeyboardMarkup REPLY_KEYBOARD_MARKUP = InitKeyboard();
 
     private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
@@ -26,7 +27,7 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
         try {
-            setButtons(sendMessage);
+            setButtons(sendMessage, REPLY_KEYBOARD_MARKUP);
             execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -54,14 +55,14 @@ public class Bot extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case Commands.HELP:
-                    sendMsg(message, Request_answers.HELP);
+                    sendMsg(message, RequestAnswers.HELP);
                     break;
                 case Commands.WEATHER:
                     taskPointer = TaskPointer.WEATHER;
-                    sendMsg(message, Request_answers.WEATHER);
+                    sendMsg(message, RequestAnswers.WEATHER);
                     break;
                 case Commands.CLOTHING_ADVICE:
-                    sendMsg(message, Request_answers.CLOVING_ADVICE);
+                    sendMsg(message, RequestAnswers.CLOVING_ADVICE);
                     taskPointer = TaskPointer.ADVICE;
                     break;
                 default:
@@ -69,7 +70,7 @@ public class Bot extends TelegramLongPollingBot {
                         sendMsg(message, performTask(message.getText(), taskPointer));
                         taskPointer = TaskPointer.FREE;
                     } else
-                        sendMsg(message, Request_answers.EMPTY_TASK);
+                        sendMsg(message, RequestAnswers.EMPTY_TASK);
                     break;
             }
         }
@@ -83,14 +84,18 @@ public class Bot extends TelegramLongPollingBot {
             else
                 result = ClothingAdvice.getAdvice(message);
         } catch (IOException e) {
-            result = Request_answers.DEFAULT;
+            result = RequestAnswers.DEFAULT;
         }
         return result;
     }
 
-    public void setButtons(SendMessage sendMessage) {
+    public void setButtons(SendMessage sendMessage, ReplyKeyboardMarkup REPLY_KEYBOARD_MARKUP) {
+        sendMessage.setReplyMarkup(REPLY_KEYBOARD_MARKUP);
+    }
+
+    public ReplyKeyboardMarkup InitKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
@@ -107,6 +112,7 @@ public class Bot extends TelegramLongPollingBot {
         keyboardRowList.add(secondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
 
+        return replyKeyboardMarkup;
     }
 
     @Override
