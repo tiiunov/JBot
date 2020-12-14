@@ -2,7 +2,7 @@ public class Model {
 
     private String name;
     private Double temp;
-    private String description;
+    private String icon;
 
     public String getName() {
         return name;
@@ -17,5 +17,13 @@ public class Model {
     }
 
     public void setTemp(Double temp) { this.temp = temp; }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
 }
