@@ -80,7 +80,7 @@ public class Bot extends TelegramLongPollingBot {
         String result;
         try {
             if (task == TaskPointer.WEATHER)
-                result = Weather.getWeather(message);
+                result = Weather.getAnswer(message);
             else
                 result = ClothingAdvice.getAdvice(message);
         } catch (IOException e) {

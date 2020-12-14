@@ -23,9 +23,14 @@ public class ClothingAdvice {
         JSONArray weather = object.getJSONArray("weather");
 
         Double temp = main.getDouble("temp");
+        String pic = "";
         JSONObject data = weather.getJSONObject(0);
         int status = data.getInt("id");
-        return chooseFirstAdvice(temp) + chooseSecondAdvice(status);
+        for (int i = 0; i < weather.length(); i++) {
+            JSONObject obj = weather.getJSONObject(i);
+            pic = (String) obj.get("icon");
+        }
+        return chooseFirstAdvice(temp) + chooseSecondAdvice(status) +"http://openweathermap.org/img/w/" + pic + ".png";
     }
 
     public static String chooseFirstAdvice(Double temperature) {
