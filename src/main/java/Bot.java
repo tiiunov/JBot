@@ -13,12 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.*;
 
 public class Bot extends TelegramLongPollingBot {
     private final String botName = "sdfhgd_bot";
     private final String botToken = readBotToken();
     private TaskPointer taskPointer = TaskPointer.FREE;
     private final ReplyKeyboardMarkup REPLY_KEYBOARD_MARKUP = InitKeyboard();
+    private static final Logger log = Logger.getLogger(Bot.class.getName());
 
     private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
@@ -82,8 +84,9 @@ public class Bot extends TelegramLongPollingBot {
             if (task == TaskPointer.WEATHER)
                 result = Weather.getAnswer(message);
             else
-                result = ClothingAdvice.getAdvice(message);
+                result = ClothingAdvice.getAnswer(message);
         } catch (IOException e) {
+            log.log(Level.SEVERE, "Exception: ", e);
             result = RequestAnswers.DEFAULT;
         }
         return result;
